@@ -1,1 +1,1 @@
-# Online-Trivia_javaFX
+# Online-Trivia-JavaFX
