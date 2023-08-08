@@ -1,0 +1,40 @@
+<project>
+  <parent>
+    <groupId>com.example</groupId>
+    <artifactId>trivia</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
+        <javafx.version>16</javafx.version>
+    </properties>
+
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>sharedData</artifactId>
+  <version>1.0.0</version>
+
+  <!-- This is a common library jar -->
+
+
+   <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>11</release>
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>sharedData/data=triviaClient</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

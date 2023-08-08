@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>trivia</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging> <!-- Parent POM is of type "pom" -->
+
+<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
+        <javafx.version>16</javafx.version>
+    </properties>
+
+
+    <modules>
+        <module>triviaClient</module>
+        <module>triviaServer</module>
+        <module>sharedData</module> <!-- Add the shared module here -->
+    </modules>
+
+    <!-- Shared properties, dependencies, and configurations can go here -->
+
+</project>
