@@ -38,13 +38,14 @@ public class ServerThread extends Thread {
 		ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
 		System.out.println("Connection established. game started!");
 		while (!gameEnded) {
-			// get Data from client
 			objOutputStream.writeObject(gameData.getLevel());
-			// Wait for the client's response
-			while (inputStream.available() <= 0) {
-				Thread.sleep(100); // Wait for a short period before checking again
+			try { //try and see if the client has declared end of game
+				gameEnded = (boolean) objInputStream.readObject();
+			} catch (IOException e) {
+				System.out.println("Client has been dissconnected...");
+				return;
 			}
-			gameEnded = (boolean) objInputStream.readObject();
+			Thread.sleep(100);
 		}
 		System.out.println("Game ended. disconnecting...");
 		// Close streams and socket
