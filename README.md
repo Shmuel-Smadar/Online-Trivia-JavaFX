@@ -2,7 +2,7 @@
 ## Prerequisites
 You need at least **Java 11** or above to run the code.  
 You need to use maven to compile the code. https://maven.apache.org/
-## Building
+## Building & Usage
 ```
 git clone https://github.com/Shmuel-Smadar/Online-Trivia-JavaFX.git
 cd Online-Trivia-JavaFX
@@ -17,5 +17,4 @@ To get the client running, write:
 ```
 java -jar triviaClient\shade\triviaClient.jar
 ```
-As the game opens you'll need to provide the server's IP. if you run it locally, just press "local".
-enjoy! (:
+As the game opens you'll need to provide the server's IP. if you run it locally, just press "local". enjoy! (:
