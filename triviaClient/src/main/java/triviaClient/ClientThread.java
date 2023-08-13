@@ -8,7 +8,7 @@ public class ClientThread extends Thread {
 	private ClientController cont;
 	private String ip;
 	private LevelData levelData;
-	private Object lock = new Object();
+	private Object lock;
 	private Socket s;
 	private boolean connectionEstablished;
 
@@ -16,6 +16,7 @@ public class ClientThread extends Thread {
 		connectionEstablished = false;
 		this.cont = cont;
 		this.ip = ip;
+		lock = new Object();
 	}
 
 	public void notifyAllThreads() {
@@ -25,58 +26,55 @@ public class ClientThread extends Thread {
 	}
 
 	public void run() {
-	    super.run();
-	    while (!connectionEstablished) {
-	        try {
-	            s = new Socket(ip, 3333);
-	            if (s != null)
-	                connectionEstablished = true;
-	        } catch (UnknownHostException e) {
-	            DialogUtility.showErrorAndWait("Error Connecting", "Cannot connect to server, press OK to try again.").join();
-	        } catch (IOException e) {
-	            DialogUtility.showErrorAndWait("Error Connecting", "Cannot connect to server, press OK to try again.").join();
-	        }
-	        try {
-	        	sleep(1000);
-	        } catch(InterruptedException e)
-	        {
-	        	e.printStackTrace();
-	        }
-	    }
+		super.run();
+		while (!connectionEstablished) {
+			try {
+				s = new Socket(ip, 3333);
+				if (s != null)
+					connectionEstablished = true;
+			} catch (UnknownHostException e) {
+				DialogUtility.showErrorAndWait("Error Connecting", "Cannot connect to server, press OK to try again.")
+						.join();
+			} catch (IOException e) {
+				DialogUtility.showErrorAndWait("Error Connecting", "Cannot connect to server, press OK to try again.")
+						.join();
+			}
+		}
+		try {
+			handleReadAndWrite();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	    try {
-	        handleReadAndWrite();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-
-	    try {
-	        s.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			s.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+
 
 	public synchronized void handleReadAndWrite() throws Exception {
 		OutputStream outputStream = s.getOutputStream();
 		ObjectOutputStream objOutputStream = new ObjectOutputStream(outputStream);
 		InputStream inputStream = s.getInputStream();
 		ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
-
-		for(int i = 0; i < 20; ++i) {
-			// get updated Data from server
+		boolean gameEnded = false;
+		
+		while (!gameEnded) {
 			levelData = (LevelData) objInputStream.readObject();
-			cont.newLevel(levelData);
-			synchronized (lock) {
-				while (cont.getAnswerChosen() == 0) {
-					lock.wait();
+			if (levelData == null)
+				gameEnded = true;
+			else {
+				cont.newLevel(levelData);
+				synchronized (lock) {
+					while (cont.getAnswerChosen() == 0) {
+						lock.wait();
+					}
+					lock.notifyAll();
 				}
-				lock.notifyAll();
+				objOutputStream.writeObject("Level Ended");
 			}
-			if(i == 19)
-				objOutputStream.writeObject(true);
-			else
-				objOutputStream.writeObject(false);
 		}
 		outputStream.close();
 		objOutputStream.close();

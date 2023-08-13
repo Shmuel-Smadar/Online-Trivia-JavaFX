@@ -38,10 +38,10 @@ public class ClientController {
 	private Text timerTxt;
 
 	ClientThread clientThread;
-
 	LevelData currLevel;
 	private Timeline timeline;
 
+	private final int TIME_LIMIT = 15;
 	private int currQuestionNum;
 	private int answerChosen;
 	private int currPointsNum;
@@ -49,7 +49,7 @@ public class ClientController {
 	private String ip;
 	
 	public void initialize() {
-		secondsRemaining = 30;
+		secondsRemaining = TIME_LIMIT;
 		currPointsNum = 0;
 		Font font = new Font(35); // Button font's size should increase to 40
 		questionField.setFont(font);
@@ -107,7 +107,7 @@ public class ClientController {
 
 	public void restartGame() {
 		answerChosen = 0;
-		secondsRemaining = 30;
+		secondsRemaining = TIME_LIMIT;
 		currQuestionNum = 0;
 		currPointsNum = 0;
 		updateTimer();
@@ -131,7 +131,7 @@ public class ClientController {
 			answerBtn2.setText(currLevel.getAnswers().get(1));
 			answerBtn3.setText(currLevel.getAnswers().get(2));
 			answerBtn4.setText(currLevel.getAnswers().get(3));
-			secondsRemaining = 30;
+			secondsRemaining = TIME_LIMIT;
 			updateTimer();
 			timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 				secondsRemaining--;
