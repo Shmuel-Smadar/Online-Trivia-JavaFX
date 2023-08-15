@@ -1,22 +1,24 @@
 package triviaClient;
 
-import javafx.scene.control.TextInputDialog;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import data.LevelData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
+
+import java.util.Optional;
 
 public class ClientController {
 
@@ -47,13 +49,13 @@ public class ClientController {
 	private int currPointsNum;
 	private int secondsRemaining;
 	private String ip;
+	private int port;
 	
 	public void initialize() {
 		secondsRemaining = TIME_LIMIT;
 		currPointsNum = 0;
 		Font font = new Font(35); // Button font's size should increase to 40
 		questionField.setFont(font);
-		this.ip = getIPFromUser();
 		font = new Font(20);
 		answerBtn1.setFont(font);
 		answerBtn2.setFont(font);
@@ -61,20 +63,23 @@ public class ClientController {
 		answerBtn4.setFont(font);
 		questionField.setEditable(false);
 		questionField.setWrapText(true);
+		getIPAndPortFromUser();
 		clientThread = new ClientThread(this, ip);
 		clientThread.start();
 	}
-	
-	private String getIPFromUser() {
-	    TextInputDialog dialog = new TextInputDialog();
-	    dialog.setTitle("Server IP");
-	    dialog.setHeaderText(null);
-	    dialog.setContentText("Please insert the server's IP");
-	    Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-	    cancelButton.setText("Local");
-	    return dialog.showAndWait().orElse("127.0.0.1");
+
+	private void getIPAndPortFromUser() {
+		ServerConnectionStage secondaryStage = new ServerConnectionStage(this);
+		Stage stage = new Stage();
+		secondaryStage.start(stage);
+		// Wait until the secondary stage is closed
 	}
 
+	public void setIpAndPort(String ip, int port)
+	{
+		this.ip = ip;
+		this.port = port;
+	}
 
 
 	@FXML
