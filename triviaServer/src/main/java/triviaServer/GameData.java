@@ -30,9 +30,8 @@ public class GameData {
 	}
 
 	private void readGameData(File file) {
-		try {
-			Scanner scanner = new Scanner(file); 
-
+		int currentLine = 0;
+		try (Scanner scanner = new Scanner(file)) {
 			while (scanner.hasNextLine()) {
 				numOfQuestions++;
 				String q = scanner.nextLine();
@@ -40,17 +39,23 @@ public class GameData {
 				String a2 = scanner.nextLine();
 				String a3 = scanner.nextLine();
 				String a4 = scanner.nextLine();
-				int correntAnswer = Integer.parseInt(scanner.nextLine());
-
+				int correctAnswer = Integer.parseInt(scanner.nextLine());
+				if(correctAnswer < 1 || correctAnswer > 4)
+					throw new NumberFormatException();
+				currentLine += 6;
 				ArrayList<String> answers = new ArrayList<String>();
 				answers.add(a1);
 				answers.add(a2);
 				answers.add(a3);
 				answers.add(a4);
-				levelsData.add(new LevelData(q, answers, correntAnswer));
+				levelsData.add(new LevelData(q, answers, correctAnswer));
 			}
-			scanner.close();
-		} catch (IOException e) {
+		} catch (NumberFormatException e) {
+			System.out.println("Invalid number at line " + (currentLine + 6) + ". This line should contain a correct answer, represented by an integer between 1 and 4.");
+			System.exit(0);
+		} catch (Exception e) {
+			System.out.println("An error occurred while reading data, Please make sure your file is following the correct format.");
+			System.exit(0);
 		}
 	}
 }
